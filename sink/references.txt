@@ -1,0 +1,3 @@
+
+os.Getenv vs os.LookupEnv
+https://stackoverflow.com/questions/64717467/how-to-read-linux-environment-variables-in-go
