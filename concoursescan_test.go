@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestCredentialsSet(t *testing.T) {
+func TestCredentialsPresent(t *testing.T) {
 	var testuser string = "user+113@concourselabs.com"
 	var testpass string = "somepassword"
 	os.Setenv("CONCOURSE_USERNAME", testuser)
@@ -27,7 +27,7 @@ func TestCredentialsSet(t *testing.T) {
 	os.Clearenv()
 }
 
-func TestCredentialsUnset(t *testing.T) {
+func TestCredentialsAbsent(t *testing.T) {
 	os.Unsetenv("CONCOURSE_USERNAME")
 	os.Unsetenv("CONCOURSE_PASSWORD")
 	user, pass := checkCredentials()
