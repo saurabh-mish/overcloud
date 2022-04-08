@@ -1,3 +1,6 @@
-
 os.Getenv vs os.LookupEnv
 https://stackoverflow.com/questions/64717467/how-to-read-linux-environment-variables-in-go
+
+logging
+https://stackoverflow.com/questions/30697694/how-to-set-golangs-log-output-back-to-console
+https://stackoverflow.com/questions/28934859/how-do-i-print-message-to-stderr-in-go
