@@ -94,6 +94,4 @@ func TestValidResponseData(t *testing.T) {
     		t.Errorf("Error retrieving access token %v", concourseRespData.AccessToken)
     	}
     })
-	
-	// use json.Unmarshall instead of json.Decode - https://stackoverflow.com/a/31129967/13055097
 }
