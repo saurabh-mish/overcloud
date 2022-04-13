@@ -4,7 +4,15 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"bytes"
+	"net/http"
+	"net/url"
+	"strings"
+	"log"
+	"io/ioutil"
+	"encoding/json"
 )
+
 
 func checkCredentials() (*string, *string) {
 	var concourseUser string
@@ -29,10 +37,54 @@ func checkCredentials() (*string, *string) {
 	return &concourseUser, &concoursePass
 }
 
+func getAuthData(user *string, pass *string) string {
+   	var endpoint string = "https://auth.prod.concourselabs.io/api/v1/oauth/token"
+	payload := url.Values{
+		"username": {*user},
+		"password": {*pass},
+		"grant_type": {"password"},
+		"scope": {"INSTITUTION POLICY MODEL IDENTITY RUNTIME_DATA"},
+	}
+
+	// Efficient URL-encoded payload
+    req, err := http.NewRequest("POST", endpoint, strings.NewReader(payload.Encode()))
+    if err != nil {
+        log.Fatal(err)
+    }
+	
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")  // required for form data encoded request
+	req.Header.Add("Accept", "application/json")
+	
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+
+	//Common attributes: resp.Status, resp.Header
+	body, err := ioutil.ReadAll(resp.Body)  // resp.Body is a map object
+	if err != nil {
+        log.Fatal(err)
+    }
+
+	var prettyJSON bytes.Buffer
+	error := json.Indent(&prettyJSON, body, "", "\t")
+	if error != nil {
+        log.Fatalf("JSON parse error: %v", error)
+    }
+
+    if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+    	return prettyJSON.String()    // string(prettyJSON.Bytes())    // string(body)
+    } else {
+    	return ""
+    }
+}
+
 func main() {
-
 	username, password := checkCredentials()
-
 	fmt.Printf("Concourse Email:    %s\n", *username)
 	fmt.Printf("Concourse Password: %s\n", *password)
+
+	respData := getAuthData(username, password)
+	fmt.Println(respData)
 }
