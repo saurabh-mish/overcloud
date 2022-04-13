@@ -1,6 +1,20 @@
-os.Getenv vs os.LookupEnv
+os.Getenv vs os.LookupEnv:
 https://stackoverflow.com/questions/64717467/how-to-read-linux-environment-variables-in-go
 
-logging
+logging:
 https://stackoverflow.com/questions/30697694/how-to-set-golangs-log-output-back-to-console
 https://stackoverflow.com/questions/28934859/how-do-i-print-message-to-stderr-in-go
+
+strings.NewReader(data.Encode()) (more efficient) instead of bytes.NewBufferString(data.Encode()):
+https://pkg.go.dev/strings#NewReader
+
+cURL Manpage:
+https://curl.se/docs/manpage.html
+
+http.PostForm vs http.NewRequest
+https://pkg.go.dev/net/http#PostForm
+
+TODO:
+https://stackoverflow.com/a/31129967/13055097
+https://stackoverflow.com/a/55052845/13055097
+https://stackoverflow.com/a/29046984/13055097
