@@ -1,0 +1,38 @@
+curl --location --request POST 'https://auth.prod.concourselabs.io/api/v1/oauth/token' \
+	--header 'Accept: application/json' \
+	--header 'Content-Type: application/x-www-form-urlencoded' \
+	--data-urlencode 'username=user+113@concourselabs.com' \
+	--data-urlencode 'password=decent_pass' \
+	--data-urlencode 'grant_type=password' \
+	--data-urlencode 'scope=INSTITUTION POLICY MODEL IDENTITY RUNTIME_DATA' | jq
+
+
+
+curl --location --request POST 'https://prod.concourselabs.io/api/evaluation/v1/institutions/113/enclave-models/evaluateTransform' \
+--header 'Accept: application/json' \
+--header 'Application_: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiZGFzaGJvYXJkLWFwaS1zZXJ2aWNlIiwidXNlci1hcGktc2VydmljZSIsIm1vZGVsLWFwaS1zZXJ2aWNlIiwicG9saWN5LWFwaS1zZXJ2aWNlIiwiY2F0YWxvZy1hcGktc2VydmljZSIsImV2YWx1YXRpb24tYXBpLXNlcnZpY2UiLCJhc3NldGdlbi1zZXJ2aWNlIiwiY2FjaGUtc2VydmljZSIsIndvcmtmbG93LWFwaS1zZXJ2aWNlIiwicmVwb3J0LWFwaS1zZXJ2aWNlIiwiY29uY291cnNlLWFjdGl2aXR5LW1vbml0b3Jpbmctc2VydmljZSIsImluc3RpdHV0aW9uLWFwaS1zZXJ2aWNlIiwiYmFzZWxpbmUtYXBpLXNlcnZpY2UiXSwidXNlcl9uYW1lIjoic2F1cmFiaCsxMTNAY29uY291cnNlbGFicy5jb20iLCJzY29wZSI6WyJJREVOVElUWSIsIklOU1RJVFVUSU9OIiwiTU9ERUwiLCJQT0xJQ1kiLCJSVU5USU1FX0RBVEEiXSwiZXh0cmEiOnsiaW5zdGl0dXRpb25JZCI6MTEzLCJ1c2VySWQiOjEwMTY4NSwidXNlckVtYWlsIjoic2F1cmFiaCsxMTNAY29uY291cnNlbGFicy5jb20iLCJncm91cElkcyI6WzUwMDEzXSwic3VyZmFjZUlkcyI6WzY3NTIsNTc3MjgsOTg5NCw0MTM1MSw2MzE1LDUwMDMsMTAxMjQsNjczNCw2MDI4MywxMzI3NSw4MDkzLDU5ODIsNTk4M119LCJleHAiOjE2NTA4MjU0NTcsImF1dGhvcml0aWVzIjpbIk1BTkFHRV9CQVNFTElORVMiLCJNQU5BR0VfR1JPVVBTIiwiTUFOQUdFX0lOU1RJVFVUSU9OUyIsIk1BTkFHRV9TVVJGQUNFUyIsIlZJRVdfUkVQT1JUUyIsIk1BTkFHRV9BVFRSSUJVVEVfVEFHUyIsIk1BTkFHRV9QT0xJQ1lfR1JPVVBTIiwiTUFOQUdFX1NVUkZBQ0VfTEFZRVJTIiwiTUFOQUdFX0NPTlRST0xfQ0FUQUxPR1MiLCJNQU5BR0VfTU9ERUxTIiwiTUFOQUdFX1BPTElDWV9HUk9VUF9URU1QTEFURVMiLCJNQU5BR0VfQ0xPVURfUk9MRVMiLCJVUERBVEVfU1VSRkFDRVMiLCJNQU5BR0VfVVNFUlMiLCJNQU5BR0VfUk9MRV9BU1NJR05NRU5UUyIsIk1BTkFHRV9DT05UUk9MUyJdLCJqdGkiOiJjODAxODYyYS05YzUzLTRkODgtYTEwNC1mYmU5ODhiYjk4MTMiLCJjbGllbnRfaWQiOiIzZGYwNDY2ZTU0NTlhYTllZGQzNzI3ZWZlNzEyMDQwZi5hcGkuY29uY291cnNlaHViLmNvbSJ9.ePU9o3konVx94nr2v3hbqhn9jL_N_5EScWWTwF2xt_P91O6udIUcwzZwRxSrV1il_p2yHQvy3aA96yuwgUe5ATi0y4ovSx8GPF5eIXGpCtr9T-v8wtU5U_0-fbn0Gt4yMMv16qJrknowzaj7bIYs9pEbXhJv8fYfKtyfJVoi4GvDAk1NQbWP9Tado8k60QhTHMGgCObjh3Nvshq-RPatTGDkhuSoAr6nM6ImoORyIGHc6Q0dDEKjgd4Zj6hIiFVf4Lwx0LzyM6e_PU9qEAbe74f9hZ1vHEWVeZLNCAin97UALe0pY3G1B6ZTezWs79MukHw4gbXnjP8F8oTwZYeb5w' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "assetType": "ENCLAVE",
+    "cloudProvider": "AWS",
+    "name": "ErrorTest",
+    "description": "ErrorTest Saurabh",
+    "owningGroupId": 56442,
+    "status": "DRAFT",
+    "managementStrategy": "SELF_MANAGED",
+    "resourceTemplates": [
+        {
+            "identifier": "buckets_with_no_encryption.json",
+            "text": "{\"AWSTemplateFormatVersion\":\"2010-09-09\",\"Resources\":{\"S3BucketEncryptionNotSet\":{\"Type\":\"AWS::S3::Bucket\",\"Properties\":{\"BucketName\":\"fakebucketfaaaake\",\"AccessControl\":\"BucketOwnerRead\"}},\"Green_S3BucketEncryptionSet\":{\"Type\":\"AWS::S3::Bucket\",\"Properties\":{\"BucketName\":\"encryptedfakebucket\",\"AccessControl\":\"BucketOwnerRead\",\"BucketEncryption\":{\"ServerSideEncryptionConfiguration\":[{\"ServerSideEncryptionByDefault\":{\"SSEAlgorithm\":\"AES256\"}}]}}}}}",
+            "isRoot": true
+        }
+    ],
+    "attributeTags": [
+        {
+            "id": 192077
+        },{
+            "id": 154840
+        }
+    ]
+}'
