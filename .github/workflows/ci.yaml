@@ -1,0 +1,54 @@
+name: Overcloud
+
+on:
+  push:
+    branches:
+    - main
+    - master
+  pull_request:
+    branches:
+    - main
+    - master
+
+jobs:
+
+  test:
+    strategy:
+      matrix:
+        go-version: [1.15.x, 1.18.x]
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup golang
+      uses: actions/setup-go@v3
+      with:
+        go-version: ${{ matrix.go-version }}
+
+    - name: Golang info
+      run: go version
+
+    - name: Format code
+      run: go fmt ./authorization
+
+    - name: Vet source code
+      run: go vet -c=3 -json ./authorization
+
+    - name: Get dependencies and create binary
+      run: |
+        go get -d ./authorization
+        go build -o auth ./authorization
+
+    - name: Run tests
+      run: |
+        go test -v ./authorization
+        go test ./authorization -race -coverprofile=profile.out -covermode=atomic
+
+    - name: Compute coverage, output data and create report
+      run: |
+        go test -v ./authorization -coverprofile profile.out
+        go tool cover -func profile.out
+        go tool cover -html=profile.out -o coverage.html
