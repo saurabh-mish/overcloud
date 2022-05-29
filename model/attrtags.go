@@ -1,4 +1,4 @@
-package main
+package model
 
 import (
 	//"os"
@@ -34,7 +34,7 @@ func getAccessToken() string {
 }
 
 
-func getAllAttributeTags() {
+func GetAllAttributeTags() {
 	const url      = "https://prod.concourselabs.io/api/model/v1"
 	const resource = "/institutions/113/attribute-tags"
 	endpoint := url + resource
@@ -54,8 +54,4 @@ func getAllAttributeTags() {
     // convert map object to byte array
     body, _ := ioutil.ReadAll(resp.Body)
     log.Println(string(body))
-}
-
-func main() {
-	getAllAttributeTags()
 }
