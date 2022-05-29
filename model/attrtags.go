@@ -1,6 +1,7 @@
 package model
 
 import (
+	"strconv"
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
@@ -19,7 +20,7 @@ type ConcourseAuthData struct {
 }
 
 type AttrTag struct {
-    Name    string `json:"name"`
+    Name        string `json:"name"`
     Description string `json:"description"`
 }
 
@@ -85,5 +86,33 @@ func CreateAttributeTag() {
 	resp, _ := http.DefaultClient.Do(req)
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
+    log.Println(string(body))
+}
+
+/*
+func ReadAttributeTag() {
+
+}
+*/
+
+func DeleteAttributeTag(tagId int) {
+	const url      = "https://prod.concourselabs.io/api/model/v1"
+	const resource = "/institutions/113/attribute-tags"
+	attrTag        := strconv.Itoa(tagId)
+	endpoint       := url + resource + "/" + attrTag
+
+	req, err := http.NewRequest(http.MethodDelete, endpoint, nil)
+	if err != nil {
+		log.Println("Endpoint unavailable ...")
+	}
+
+	apiToken := "Bearer " + getAccessToken()
+	req.Header.Add("Authorization", apiToken)
+	resp, _ := http.DefaultClient.Do(req)
+
+	defer resp.Body.Close()
+
+    // convert map object to byte array
+    body, _ := ioutil.ReadAll(resp.Body)
     log.Println(string(body))
 }
