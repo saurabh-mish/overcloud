@@ -1,8 +1,7 @@
 package model
 
 import (
-	//"os"
-	//"bytes"
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -17,6 +16,11 @@ type ConcourseAuthData struct {
 	ExpiresIn    int16      `json:"expires_in"`
 	Scope        string     `json:"scope"`
 	Jti          string     `json:"jti"`
+}
+
+type AttrTag struct {
+    Name    string `json:"name"`
+    Description string `json:"description"`
 }
 
 func getAccessToken() string {
@@ -53,5 +57,33 @@ func GetAllAttributeTags() {
 
     // convert map object to byte array
     body, _ := ioutil.ReadAll(resp.Body)
+    log.Println(string(body))
+}
+
+
+func CreateAttributeTag() {
+	const url      = "https://prod.concourselabs.io/api/model/v1"
+	const resource = "/institutions/113/attribute-tags"
+	endpoint := url + resource
+
+	jsonPayload := &AttrTag{
+	    Name:    "saurabh test name",
+	    Description: "Saurabh test description",
+	}
+
+	payloadBuf := new(bytes.Buffer)
+	json.NewEncoder(payloadBuf).Encode(jsonPayload)
+	req, err := http.NewRequest(http.MethodPost, endpoint, payloadBuf)
+	if err != nil {
+		log.Println("Endpoint unavailable ...")
+	}
+
+	apiToken := "Bearer " + getAccessToken()
+	req.Header.Add("Authorization", apiToken)
+	req.Header.Add("Content-Type", "application/json")
+
+	resp, _ := http.DefaultClient.Do(req)
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
     log.Println(string(body))
 }
