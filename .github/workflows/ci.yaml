@@ -37,10 +37,10 @@ jobs:
     - name: Vet source code
       run: go vet -c=3 -json ./auth
 
-    - name: Get dependencies and create binary
-      run: |
-        go get -d ./auth
-        go build -o auth ./auth
+    #- name: Get dependencies and create binary
+    #  run: |
+    #    go get -d ./auth
+    #    go build -o auth ./auth
 
     - name: Run tests
       run: |
