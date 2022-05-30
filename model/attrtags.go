@@ -1,28 +1,43 @@
 package model
 
 import (
-	"strconv"
 	"bytes"
 	"encoding/json"
+	"github.com/saurabh-mish/overcloud/auth"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"github.com/saurabh-mish/overcloud/auth"
+	"strconv"
 )
 
 type ConcourseAuthData struct {
-	AccessToken  string     `json:"access_token"`
-	TokenType    string     `json:"token_type"`
-	RefreshToken string     `json:"refresh_token"`
-	ExpiresIn    int16      `json:"expires_in"`
-	Scope        string     `json:"scope"`
-	Jti          string     `json:"jti"`
+	AccessToken  string `json:"access_token"`
+	TokenType    string `json:"token_type"`
+	RefreshToken string `json:"refresh_token"`
+	ExpiresIn    int16  `json:"expires_in"`
+	Scope        string `json:"scope"`
+	Jti          string `json:"jti"`
+	// ignoring JSON field "extra_info"
 }
 
-type AttrTag struct {
-    Name        string `json:"name"`
-    Description string `json:"description"`
+type AttrTagReq struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
+
+type AttrTagResp struct {
+	ID            int  `json:"id"`
+	Version       int  `json:"version"`
+	//Created       time `json:"created"`
+	//Updated       time `json:"updated"`
+	CreatedBy     int  `json:"created_by"`
+	UpdatedBy     int  `json:"updated_by"`
+	InstitutionId int  `json:"institutionId"`
+	// ignoring JSON fields "name" and "description"
+}
+
+const url      = "https://prod.concourselabs.io/api/model/v1"
+const resource = "/institutions/113/attribute-tags"
 
 func getAccessToken() string {
 	var concourseAuth ConcourseAuthData
@@ -38,10 +53,7 @@ func getAccessToken() string {
 	return concourseAuth.AccessToken
 }
 
-
 func GetAllAttributeTags() {
-	const url      = "https://prod.concourselabs.io/api/model/v1"
-	const resource = "/institutions/113/attribute-tags"
 	endpoint := url + resource
 
 	req, err := http.NewRequest(http.MethodGet, endpoint, nil)
@@ -54,22 +66,32 @@ func GetAllAttributeTags() {
 	req.Header.Add("Authorization", apiToken)
 	resp, _ := http.DefaultClient.Do(req)
 
-    defer resp.Body.Close()
+	defer resp.Body.Close()
 
-    // convert map object to byte array
-    body, _ := ioutil.ReadAll(resp.Body)
-    log.Println(string(body))
+	// convert map object to byte array
+	body, _ := ioutil.ReadAll(resp.Body)
+	log.Println(string(body))
 }
 
-
+/*
+{
+	"id": 212891,
+	"version": 0,
+	"created": "2022-05-29T20:18:50.190Z",
+	"updated": "2022-05-29T20:18:50.190Z",
+	"createdBy": 101685,
+	"updatedBy": 101685,
+	"institutionId": 113,
+	"name": "saurabh_test_name",
+	"description": "saurabh_test_description"
+}
+*/
 func CreateAttributeTag() {
-	const url      = "https://prod.concourselabs.io/api/model/v1"
-	const resource = "/institutions/113/attribute-tags"
 	endpoint := url + resource
 
-	jsonPayload := &AttrTag{
-	    Name:    "saurabh test name",
-	    Description: "Saurabh test description",
+	jsonPayload := &AttrTagReq{
+		Name:        "saurabh test name",
+		Description: "Saurabh test description",
 	}
 
 	payloadBuf := new(bytes.Buffer)
@@ -86,20 +108,34 @@ func CreateAttributeTag() {
 	resp, _ := http.DefaultClient.Do(req)
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-    log.Println(string(body))
+	log.Println(string(body))
+
+	// unmarshall response body to AttrTagResp struct which will output the ID of attribute tag created
 }
 
 /*
 func ReadAttributeTag() {
 
+
+
+}
+*/
+
+/*
+func UpdateAttributeTag(tagId int) {
+	// read file
+
+	// unmarshall to struct
+
+	// encode to JSON
+
+	// perform request
 }
 */
 
 func DeleteAttributeTag(tagId int) {
-	const url      = "https://prod.concourselabs.io/api/model/v1"
-	const resource = "/institutions/113/attribute-tags"
-	attrTag        := strconv.Itoa(tagId)
-	endpoint       := url + resource + "/" + attrTag
+	attrTag := strconv.Itoa(tagId)
+	endpoint := url + resource + "/" + attrTag
 
 	req, err := http.NewRequest(http.MethodDelete, endpoint, nil)
 	if err != nil {
@@ -112,7 +148,7 @@ func DeleteAttributeTag(tagId int) {
 
 	defer resp.Body.Close()
 
-    // convert map object to byte array
-    body, _ := ioutil.ReadAll(resp.Body)
-    log.Println(string(body))
+	// convert map object to byte array
+	body, _ := ioutil.ReadAll(resp.Body)
+	log.Println(string(body))
 }
