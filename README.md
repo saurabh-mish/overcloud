@@ -38,8 +38,8 @@ This token is then used to interact with the attribute tag endpoint `institution
   curl --request POST 'https://auth.prod.concourselabs.io/api/v1/oauth/token' \
     --header 'Accept: application/json' \
     --header 'Content-Type: application/x-www-form-urlencoded' \
-    --data-urlencode 'username=user+113@concourselabs.com' \
-    --data-urlencode 'password=decentPassword' \
+    --data-urlencode 'username='"$CONCOURSE_USERNAME"'' \
+    --data-urlencode 'password='"$CONCOURSE_PASSWORD"'' \
     --data-urlencode 'grant_type=password' \
     --data-urlencode 'scope=INSTITUTION POLICY MODEL IDENTITY RUNTIME_DATA' \
     | jq
@@ -87,7 +87,7 @@ This token is then used to interact with the attribute tag endpoint `institution
   ```
   curl --request PUT \
     --url https://prod.concourselabs.io/api/model/v1/institutions/113/attribute-tags/<id> \
-    --header 'Authorization: Bearer '"$CONCOURSE_TOKEN"' ' \
+    --header 'Authorization: Bearer '"$CONCOURSE_TOKEN"'' \
     --header 'Content-Type: application/json' \
     --data '{
       "name": "saurabh_updated_name",
@@ -120,6 +120,8 @@ When create, read, and update opertions are performed on an attribute tag, respo
   "description" : string
 }
 ```
+
+On deleting an attribute tag, a `204` response is returned without any data.
 
 [1]: https://api-doc.prod.concourselabs.io/?urls.primaryName=Auth%20Service
 [2]: https://api-doc.prod.concourselabs.io/?urls.primaryName=Model%20Service
