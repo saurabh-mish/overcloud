@@ -38,6 +38,9 @@ func CheckCredentials() (*string, *string) {
 
 func GetAuthData(user *string, pass *string) string {
 	var endpoint string = "https://auth.prod.concourselabs.io/api/v1/oauth/token"
+
+	// todo: use structure for form data to create payload
+
 	payload := url.Values{
 		"username":   {*user},
 		"password":   {*pass},
@@ -78,14 +81,3 @@ func GetAuthData(user *string, pass *string) string {
 		return ""
 	}
 }
-
-
-/*func main() {
-	username, password := checkCredentials()
-	fmt.Printf("Concourse Email:    %s\n", *username)
-	fmt.Printf("Concourse Password: %s\n", *password)
-
-	respData := getAuthData(username, password)
-	fmt.Println(respData)
-}
-*/
