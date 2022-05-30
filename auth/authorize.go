@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-type ConcourseAuth struct {
+type ConcourseAuthReq struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 	GrantType string `json:"grant_type"`
@@ -49,7 +49,7 @@ func CheckCredentials() (*string, *string) {
 
 func GetAuthData(user *string, pass *string) string {
 
-	jsonData := &ConcourseAuth{
+	jsonData := &ConcourseAuthReq{
 		Username: *user,
 		Password: *pass,
 		GrantType: "password",
