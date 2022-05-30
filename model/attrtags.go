@@ -86,6 +86,7 @@ func GetAllAttributeTags() {
 	"description": "saurabh_test_description"
 }
 */
+
 func CreateAttributeTag() {
 	endpoint := url + resource
 
@@ -130,6 +131,8 @@ func UpdateAttributeTag(tagId int) {
 	// encode to JSON
 
 	// perform request
+
+	// unmarshall response body to AttrTagResp struct and compare 'created' and 'updated' times
 }
 */
 
