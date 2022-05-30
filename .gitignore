@@ -18,3 +18,4 @@ coverage.html
 # Local
 .DS_Store
 .github/
+./sink/*.go
