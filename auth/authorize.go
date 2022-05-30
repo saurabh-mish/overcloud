@@ -13,6 +13,16 @@ import (
 	"strings"
 )
 
+type ConcourseAuth struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	GrantType string `json:"grant_type"`
+	Scope string `json:"scope"`
+}
+
+const endpoint string = "https://auth.prod.concourselabs.io/api/v1/oauth/token"
+
+
 func CheckCredentials() (*string, *string) {
 	var concourseUser string
 	var concoursePass string
@@ -36,25 +46,28 @@ func CheckCredentials() (*string, *string) {
 	return &concourseUser, &concoursePass
 }
 
+
 func GetAuthData(user *string, pass *string) string {
-	var endpoint string = "https://auth.prod.concourselabs.io/api/v1/oauth/token"
 
-	// todo: use structure for form data to create payload
-
-	payload := url.Values{
-		"username":   {*user},
-		"password":   {*pass},
-		"grant_type": {"password"},
-		"scope":      {"INSTITUTION POLICY MODEL IDENTITY RUNTIME_DATA"},
+	jsonData := &ConcourseAuth{
+		Username: *user,
+		Password: *pass,
+		GrantType: "password",
+		Scope: "INSTITUTION POLICY MODEL IDENTITY RUNTIME_DATA",
 	}
 
-	// Efficient URL-encoded payload
-	req, err := http.NewRequest("POST", endpoint, strings.NewReader(payload.Encode()))
+	formData := url.Values{
+		"username":   {jsonData.Username},
+		"password":   {jsonData.Password},
+		"grant_type": {jsonData.GrantType},
+		"scope":      {jsonData.Scope},
+	}
+
+	req, err := http.NewRequest("POST", endpoint, strings.NewReader(formData.Encode()))
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded") // required for form data encoded request
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Add("Accept", "application/json")
 
 	resp, err := http.DefaultClient.Do(req)
