@@ -1,3 +1,0 @@
-Create application binary
-
-Integrate with Evaluation endpoint
