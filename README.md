@@ -1,10 +1,13 @@
-# overcloud
+[![Overcloud](https://github.com/saurabh-mish/overcloud/actions/workflows/ci.yaml/badge.svg)](https://github.com/saurabh-mish/overcloud/actions/workflows/ci.yaml)
 
-Concourse Labs endpoint consumption
+# Overcloud
 
-## [Authorization Service][1]
+Consumes public APIs of Concourse Labs.
 
-### Endpoint Test with cURL
+This CLI application consumes one endpoints from the auth and model service.
+
+
+## Getting Started
 
 + Install tools
 
@@ -14,6 +17,20 @@ Concourse Labs endpoint consumption
   PACKAGE_MANAGER install curl
   PACKAGE_MANAGER install jq
   ```
+
++ Set environment variables
+
+  ```
+  export CONCOURSE_USERNAME="user+113@concourselabs.com"
+  export CONCOURSE_PASSWORD="decentPassword"
+  ```
+
+## Testing APIs with HTTP
+
+Authorization access is retrieved from the token endpoint `oauth/token` which is part of the auth service.
+This token is then used to interact with the attribute tag endpoint `institutions/<id>/attribute-tags` - part of the model service.
+
+### [Authorization Service][1]
 
 + Auth Service `POST` request
 
@@ -28,38 +45,81 @@ Concourse Labs endpoint consumption
     | jq
   ```
 
-### CLI Application
-
-+ Set environment variables
++ Copy the value of `access_token` to environment variable `CONCOURSE_TOKEN`.
 
   ```
-  export CONCOURSE_USERNAME="user+113@concourselabs.com"
-  export CONCOURSE_PASSWORD="decentPassword"
-  export CONCOURSE_ATTRIBUTE_TAGS="192077,154840"
+  export CONCOURSE_TOKEN=ey...
   ```
 
-+ Testing
+### [Model Service][2]
+
++ Read all attribute tags
 
   ```
-  go test ./authorization
+  curl --request GET \
+    --url https://prod.concourselabs.io/api/model/v1/institutions/113/attribute-tags \
+    --header 'Authorization: Bearer '"$CONCOURSE_TOKEN"''
   ```
 
-+ Coverage
++ Create attribute tag
 
-  + Enable code coverage for tests
+  ```
+  curl --request POST \
+    --url https://prod.concourselabs.io/api/model/v1/institutions/113/attribute-tags \
+    --header 'Authorization: Bearer '"$CONCOURSE_TOKEN"'' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "name": "some name",
+      "description": "brief description"
+    }'
+  ```
 
-    `go test -v ./authorization -coverprofile profile.out`
++ Read attribute tag
 
-  + View coverage data from raw file
+  ```
+  curl --request GET \
+    --url https://prod.concourselabs.io/api/model/v1/institutions/113/attribute-tags/<id> \
+    --header 'Authorization: Bearer '"$CONCOURSE_TOKEN"''
+  ```
 
-    `go tool cover -func profile.out`
++ Update attribute tag
 
-  + Translate raw data to HTML
+  ```
+  curl --request PUT \
+    --url https://prod.concourselabs.io/api/model/v1/institutions/113/attribute-tags/<id> \
+    --header 'Authorization: Bearer '"$CONCOURSE_TOKEN"' ' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "name": "saurabh_updated_name",
+      "description": "saurabh_updated_description"
+    }'
+  ```
 
-    `go tool cover -html=profile.out -o coverage.html`
++ Delete attribute tag
 
-  + Open HTML file in browser for inspection
+  ```
+  curl --request DELETE \
+    --url https://prod.concourselabs.io/api/model/v1/institutions/113/attribute-tags/<id> \
+    --header 'Authorization: Bearer '"$CONCOURSE_TOKEN"''
+  ```
 
+### Data Structure
+
+When create, read, and update opertions are performed on an attribute tag, response data with the below structure is returned:
+
+```
+{
+  "id" : integer,
+  "version" : integer,
+  "created" : time (UTC),
+  "updated" : time (UTC),
+  "createdBy" : integer,
+  "updatedBy" : integer,
+  "institutionId" : integer,
+  "name" : string,
+  "description" : string
+}
+```
 
 [1]: https://api-doc.prod.concourselabs.io/?urls.primaryName=Auth%20Service
 [2]: https://api-doc.prod.concourselabs.io/?urls.primaryName=Model%20Service
