@@ -4,7 +4,7 @@
 
 Consumes public APIs of Concourse Labs.
 
-This CLI application consumes endpoints from *Auth* and *Model* services.
+This CLI application consumes endpoints from *Auth* and *Model* services to perform create, read, update and delete operations.
 
 ## Executing CLI Application
 
