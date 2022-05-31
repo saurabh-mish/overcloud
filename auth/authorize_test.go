@@ -25,6 +25,7 @@ type Extra_info struct {
 	SurfaceIDs    []int
 }
 
+
 func TestValidResponseData(t *testing.T) {
 	user := os.Getenv("CONCOURSE_USERNAME")
 	pass := os.Getenv("CONCOURSE_PASSWORD")
