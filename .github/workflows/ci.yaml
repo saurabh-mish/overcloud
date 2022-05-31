@@ -44,7 +44,10 @@ jobs:
 
     - name: Run tests
       run: |
-        go test -v ./auth
+        go test -v ./auth -run TestValidResponseData
+        go test -v ./auth -run TestInvalidResponseData
+        go test -v ./auth -run TestCredentialsPresent
+        go test -v ./auth -run TestCredentialsAbsent
         go test ./auth -race -coverprofile=profile.out -covermode=atomic
 
     - name: Compute coverage, output data and create report
