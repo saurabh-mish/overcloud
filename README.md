@@ -7,7 +7,13 @@ Consumes public APIs of Concourse Labs.
 This CLI application consumes endpoints from *Auth* and *Model* services.
 
 
-## Getting Started
+## Testing APIs with HTTP
+
+Authorization access is retrieved from the token endpoint `oauth/token` which is part of the auth service.
+This token is then used to interact with the attribute tag endpoint `institutions/<id>/attribute-tags` - part of the model service.
+
+
+### Getting Started
 
 + Install tools
 
@@ -25,10 +31,6 @@ This CLI application consumes endpoints from *Auth* and *Model* services.
   export CONCOURSE_PASSWORD="decentPassword"
   ```
 
-## Testing APIs with HTTP
-
-Authorization access is retrieved from the token endpoint `oauth/token` which is part of the auth service.
-This token is then used to interact with the attribute tag endpoint `institutions/<id>/attribute-tags` - part of the model service.
 
 ### [Authorization Service][1]
 
@@ -50,6 +52,7 @@ This token is then used to interact with the attribute tag endpoint `institution
   ```
   export CONCOURSE_TOKEN=ey...
   ```
+
 
 ### [Model Service][2]
 
@@ -102,6 +105,7 @@ This token is then used to interact with the attribute tag endpoint `institution
     --url https://prod.concourselabs.io/api/model/v1/institutions/113/attribute-tags/<id> \
     --header 'Authorization: Bearer '"$CONCOURSE_TOKEN"''
   ```
+
 
 ### Data Structure
 
