@@ -1,7 +1,7 @@
 package auth
 
 import (
-	//"encoding/json"
+	"encoding/json"
 	"os"
 	"testing"
 )
