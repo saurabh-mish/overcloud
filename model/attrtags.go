@@ -70,24 +70,10 @@ func GetAllAttributeTags() {
 
 	defer resp.Body.Close()
 
-	// convert map object to byte array
 	body, _ := ioutil.ReadAll(resp.Body)
 	log.Println(string(body))
 }
 
-/*
-{
-	"id": 212891,
-	"version": 0,
-	"created": "2022-05-29T20:18:50.190Z",
-	"updated": "2022-05-29T20:18:50.190Z",
-	"createdBy": 101685,
-	"updatedBy": 101685,
-	"institutionId": 113,
-	"name": "saurabh_test_name",
-	"description": "saurabh_test_description"
-}
-*/
 
 func CreateAttributeTag() {
 	endpoint := url + resource
@@ -112,8 +98,6 @@ func CreateAttributeTag() {
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
 	log.Println(string(body))
-
-	// unmarshall response body to AttrTagResp struct which will output the ID of attribute tag created
 
 	var jsonData AttrTagResp
 	json.Unmarshal(body, &jsonData)
@@ -146,7 +130,6 @@ func ReadAttributeTag(tagId int) {
 
 	defer resp.Body.Close()
 
-	// convert map object to byte array
 	var jsonData AttrTagResp
 	body, _ := ioutil.ReadAll(resp.Body)
 	json.Unmarshal(body, &jsonData)
