@@ -6,6 +6,13 @@ Consumes public APIs of Concourse Labs.
 
 This CLI application consumes endpoints from *Auth* and *Model* services.
 
+## Executing CLI Application
+
++ Run main
+
+  `go run main.go`
+
+  **NOTE**: Comment / Uncomment functions in this file.
 
 ## Testing APIs with HTTP
 
