@@ -1,10 +1,9 @@
 package auth
 
 import (
-	"encoding/json"
+	//"encoding/json"
 	"os"
 	"testing"
-	//"log"
 )
 
 type ConcourseAuth struct {
@@ -61,7 +60,7 @@ func TestValidResponseData(t *testing.T) {
 
 	t.Run("checking institution ID exists", func(t *testing.T) {
 		if concourseRespData.Extra.InstitutionID != 113 {
-			t.Errorf("Freddie Mac institution ID should be 113 %v", concourseRespData.Extra.InstitutionID)
+			t.Errorf("FM institution ID should be 113 %v", concourseRespData.Extra.InstitutionID)
 		}
 	})
 
