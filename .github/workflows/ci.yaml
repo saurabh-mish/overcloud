@@ -39,24 +39,21 @@ jobs:
     - name: Vet source code
       run: go vet -c=3 -json ./auth
 
-    #- name: Get dependencies and create binary
-    #  run: |
-    #    go get -d ./auth
-    #    go build -o auth ./auth
-
     - name: Run tests
       env:
         CONCOURSE_USERNAME: ${{ secrets.CONCOURSE_USERNAME }}
         CONCOURSE_PASSWORD: ${{ secrets.CONCOURSE_PASSWORD }}
       run: |
-        go test -v ./auth -run TestValidResponseData
-        go test -v ./auth -run TestInvalidResponseData
-        go test -v ./auth -run TestCredentialsPresent
-        go test -v ./auth -run TestCredentialsAbsent
+        go test -v ./auth
         go test ./auth -race -coverprofile=profile.out -covermode=atomic
 
-    #- name: Compute coverage, output data and create report
+    - name: Compute coverage, output data and create report
+      run: |
+        go test -v ./auth -coverprofile profile.out
+        go tool cover -func profile.out
+        go tool cover -html=profile.out -o coverage.html
+
+    #- name: Get dependencies and create binary
     #  run: |
-    #    go test -v ./auth -coverprofile profile.out
-    #    go tool cover -func profile.out
-    #    go tool cover -html=profile.out -o coverage.html
+    #    go get -d ./auth
+    #    go build -o auth ./auth
