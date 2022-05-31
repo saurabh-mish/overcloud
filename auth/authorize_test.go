@@ -24,7 +24,7 @@ type Extra_info struct {
 	SurfaceIDs    []int
 }
 
-/*
+
 func TestValidResponseData(t *testing.T) {
 	user := os.Getenv("CONCOURSE_USERNAME")
 	pass := os.Getenv("CONCOURSE_PASSWORD")
@@ -76,7 +76,7 @@ func TestValidResponseData(t *testing.T) {
 		}
 	})
 }
-*/
+
 
 func TestInvalidResponseData(t *testing.T) {
 	var testuser string = "user+113@concourselabs.com"

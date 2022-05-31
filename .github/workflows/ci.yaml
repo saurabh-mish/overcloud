@@ -45,8 +45,11 @@ jobs:
     #    go build -o auth ./auth
 
     - name: Run tests
+      env:
+        CONCOURSE_USERNAME: ${{ secrets.CONCOURSE_USERNAME }}
+        CONCOURSE_PASSWORD: ${{ secrets.CONCOURSE_PASSWORD }}
       run: |
-        # go test -v ./auth -run TestValidResponseData
+        go test -v ./auth -run TestValidResponseData
         go test -v ./auth -run TestInvalidResponseData
         go test -v ./auth -run TestCredentialsPresent
         go test -v ./auth -run TestCredentialsAbsent
