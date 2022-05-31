@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"testing"
+	//"log"
 )
 
 type ConcourseAuth struct {
@@ -24,50 +25,10 @@ type Extra_info struct {
 	SurfaceIDs    []int
 }
 
-func TestCredentialsPresent(t *testing.T) {
-	var testuser string = "user+113@concourselabs.com"
-	var testpass string = "somepassword"
-	os.Setenv("CONCOURSE_USERNAME", testuser)
-	os.Setenv("CONCOURSE_PASSWORD", testpass)
-	user, pass := CheckCredentials()
-
-	t.Run("checking set username", func(t *testing.T) {
-		if *user != testuser {
-			t.Errorf("Unable to retrieve 'CONCOURSE_USERNAME' environment variable %s", testuser)
-		}
-	})
-
-	t.Run("checking set password", func(t *testing.T) {
-		if *pass != testpass {
-			t.Errorf("Unable to retrieve 'CONCOURSE_PASSWORD' environment variable %s", testpass)
-		}
-	})
-
-	os.Clearenv()
-}
-
-func TestCredentialsAbsent(t *testing.T) {
-	os.Unsetenv("CONCOURSE_USERNAME")
-	os.Unsetenv("CONCOURSE_PASSWORD")
-	user, pass := CheckCredentials()
-
-	t.Run("checking unset username", func(t *testing.T) {
-		if *user != "" {
-			t.Errorf("Incorrect value for 'CONCOURSE_USERNAME' being used: %v", user)
-		}
-	})
-
-	t.Run("checking unset password", func(t *testing.T) {
-		if *pass != "" {
-			t.Errorf("Incorrect value for 'CONCOURSE_PASSWORD' being used: %v", pass)
-		}
-	})
-}
-
 func TestValidResponseData(t *testing.T) {
-	var testuser string = "saurabh+113@concourselabs.com"
-	var testpass string = "S@ura8hM2906"
-	responseData := GetAuthData(&testuser, &testpass)
+	user := os.Getenv("CONCOURSE_USERNAME")
+	pass := os.Getenv("CONCOURSE_PASSWORD")
+	responseData := GetAuthData(&user, &pass)
 
 	t.Run("checking valid response data", func(t *testing.T) {
 		if responseData == "" {
@@ -116,6 +77,7 @@ func TestValidResponseData(t *testing.T) {
 	})
 }
 
+
 func TestInvalidResponseData(t *testing.T) {
 	var testuser string = "user+113@concourselabs.com"
 	var testpass string = "decent_password"
@@ -124,6 +86,48 @@ func TestInvalidResponseData(t *testing.T) {
 	t.Run("checking valid response data", func(t *testing.T) {
 		if responseData != "" {
 			t.Errorf("Unauthorized access: %v", responseData)
+		}
+	})
+}
+
+
+func TestCredentialsPresent(t *testing.T) {
+	var testuser string = "user+113@concourselabs.com"
+	var testpass string = "somepassword"
+	os.Setenv("CONCOURSE_USERNAME", testuser)
+	os.Setenv("CONCOURSE_PASSWORD", testpass)
+	user, pass := CheckCredentials()
+
+	t.Run("checking set username", func(t *testing.T) {
+		if *user != testuser {
+			t.Errorf("Unable to retrieve 'CONCOURSE_USERNAME' environment variable %s", testuser)
+		}
+	})
+
+	t.Run("checking set password", func(t *testing.T) {
+		if *pass != testpass {
+			t.Errorf("Unable to retrieve 'CONCOURSE_PASSWORD' environment variable %s", testpass)
+		}
+	})
+
+	os.Clearenv()
+}
+
+
+func TestCredentialsAbsent(t *testing.T) {
+	os.Unsetenv("CONCOURSE_USERNAME")
+	os.Unsetenv("CONCOURSE_PASSWORD")
+	user, pass := CheckCredentials()
+
+	t.Run("checking unset username", func(t *testing.T) {
+		if *user != "" {
+			t.Errorf("Incorrect value for 'CONCOURSE_USERNAME' being used: %v", user)
+		}
+	})
+
+	t.Run("checking unset password", func(t *testing.T) {
+		if *pass != "" {
+			t.Errorf("Incorrect value for 'CONCOURSE_PASSWORD' being used: %v", pass)
 		}
 	})
 }
