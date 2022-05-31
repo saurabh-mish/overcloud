@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type ConcourseAuthData struct {
@@ -26,13 +27,13 @@ type AttrTagReq struct {
 }
 
 type AttrTagResp struct {
-	ID            int  `json:"id"`
-	Version       int  `json:"version"`
-	//Created       time `json:"created"`
-	//Updated       time `json:"updated"`
-	CreatedBy     int  `json:"created_by"`
-	UpdatedBy     int  `json:"updated_by"`
-	InstitutionId int  `json:"institutionId"`
+	ID            int    `json:"id"`
+	Version       int    `json:"version"`
+	Created       string `json:"created"`
+	Updated       string `json:"updated"`
+	CreatedBy     int    `json:"createdBy"`
+	UpdatedBy     int    `json:"updatedBy"`
+	InstitutionId int    `json:"institutionId"`
 	// ignoring JSON fields "name" and "description"
 }
 
@@ -113,6 +114,20 @@ func CreateAttributeTag() {
 	log.Println(string(body))
 
 	// unmarshall response body to AttrTagResp struct which will output the ID of attribute tag created
+
+	var jsonData AttrTagResp
+	json.Unmarshal(body, &jsonData)
+	createdTime, err := time.Parse(time.RFC3339, jsonData.Created)
+	updatedTime, err := time.Parse(time.RFC3339, jsonData.Updated)
+	if err != nil {
+	    log.Printf("Unable to parse given string to time: %v\n", err)
+	}
+
+	if createdTime == updatedTime {
+		log.Printf("\nAttribute tag with ID %v created successfully!", jsonData.ID)
+	} else {
+		log.Println("\nError with time difference ...")
+	}
 }
 
 
@@ -120,7 +135,7 @@ func ReadAttributeTag(tagId int) {
 	attrTag := strconv.Itoa(tagId)
 	endpoint := url + resource + "/" + attrTag
 
-	req, err := http.NewRequest(http.MethodRead, endpoint, nil)
+	req, err := http.NewRequest(http.MethodGet, endpoint, nil)
 	if err != nil {
 		log.Println("Endpoint unavailable ...")
 	}
@@ -132,24 +147,64 @@ func ReadAttributeTag(tagId int) {
 	defer resp.Body.Close()
 
 	// convert map object to byte array
+	var jsonData AttrTagResp
 	body, _ := ioutil.ReadAll(resp.Body)
-	log.Println(string(body))
+	json.Unmarshal(body, &jsonData)
+
+	log.Println(jsonData)
 }
 
 
-/*
 func UpdateAttributeTag(tagId int) {
-	// read file
+	attrTag := strconv.Itoa(tagId)
+	endpoint := url + resource + "/" + attrTag
+	log.Println(endpoint)
 
-	// unmarshall to struct
+	jsonPayload := &AttrTagReq{
+		Name:        "saurabh updated name",
+		Description: "Saurabh updated description",
+	}
 
-	// encode to JSON
+	payloadBuf := new(bytes.Buffer)
+	json.NewEncoder(payloadBuf).Encode(jsonPayload)
+	req, err := http.NewRequest(http.MethodPut, endpoint, payloadBuf)
+	if err != nil {
+		log.Println("Endpoint unavailable ...")
+	}
 
-	// perform request
+	apiToken := "Bearer " + getAccessToken()
+	req.Header.Add("Authorization", apiToken)
+	req.Header.Add("Content-Type", "application/json")
 
-	// unmarshall response body to AttrTagResp struct and compare 'created' and 'updated' times
+	resp, _ := http.DefaultClient.Do(req)
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var jsonData AttrTagResp
+	json.Unmarshal(body, &jsonData)
+	log.Println(jsonData)
+	createdTime, cerr := time.Parse(time.RFC3339, jsonData.Created)
+	if err != nil {
+	    log.Printf("Unable to parse given string to time: %v\n", cerr)
+	}
+	updatedTime, uerr := time.Parse(time.RFC3339, jsonData.Updated)
+	if err != nil {
+	    log.Printf("Unable to parse given string to time: %v\n", uerr)
+	}
+
+	if updatedTime.Sub(createdTime) > 0 {
+		log.Printf("\nAttribute tag with ID %v updated successfully!", jsonData.ID)
+	} else {
+		log.Printf("\nError updating attribute tag; time difference %v ...", updatedTime.Sub(createdTime))
+	}
+
 }
-*/
+
 
 func DeleteAttributeTag(tagId int) {
 	attrTag := strconv.Itoa(tagId)
@@ -166,7 +221,9 @@ func DeleteAttributeTag(tagId int) {
 
 	defer resp.Body.Close()
 
-	// convert map object to byte array
-	body, _ := ioutil.ReadAll(resp.Body)
-	log.Println(string(body))
+	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+		log.Println("Attribute tag deleted successfully!")
+	} else {
+		log.Printf("Deleting attribute tag failed with:\n%v", resp.StatusCode)
+	}
 }
