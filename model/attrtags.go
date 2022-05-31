@@ -39,6 +39,7 @@ type AttrTagResp struct {
 const url      = "https://prod.concourselabs.io/api/model/v1"
 const resource = "/institutions/113/attribute-tags"
 
+
 func getAccessToken() string {
 	var concourseAuth ConcourseAuthData
 
@@ -114,13 +115,27 @@ func CreateAttributeTag() {
 	// unmarshall response body to AttrTagResp struct which will output the ID of attribute tag created
 }
 
-/*
-func ReadAttributeTag() {
 
+func ReadAttributeTag(tagId int) {
+	attrTag := strconv.Itoa(tagId)
+	endpoint := url + resource + "/" + attrTag
 
+	req, err := http.NewRequest(http.MethodRead, endpoint, nil)
+	if err != nil {
+		log.Println("Endpoint unavailable ...")
+	}
 
+	apiToken := "Bearer " + getAccessToken()
+	req.Header.Add("Authorization", apiToken)
+	resp, _ := http.DefaultClient.Do(req)
+
+	defer resp.Body.Close()
+
+	// convert map object to byte array
+	body, _ := ioutil.ReadAll(resp.Body)
+	log.Println(string(body))
 }
-*/
+
 
 /*
 func UpdateAttributeTag(tagId int) {
