@@ -3,9 +3,11 @@ package main
 import "github.com/saurabh-mish/overcloud/model"
 
 func main() {
-	//model.CreateAttributeTag()
 	model.GetAllAttributeTags()
+	//model.CreateAttributeTag()
 
-	//attrTagId := 212876
+	//attrTagId := 213139
+	//model.ReadAttributeTag(attrTagId)
+	//model.UpdateAttributeTag(attrTagId)
 	//model.DeleteAttributeTag(attrTagId)
 }
